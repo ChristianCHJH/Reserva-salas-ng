@@ -1,27 +1,77 @@
-# ReservasSalasNg
+# Reservas de Salas (Angular)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.19.
+Proyecto Angular para gestionar reservas de salas. Incluye UI con PrimeNG/FullCalendar, pruebas unitarias con Jest y pipelines de CI listos para usar.
 
-## Development server
+## Requisitos
+- Node.js 20.x (recomendado LTS)
+- npm 9+
+- Angular CLI (opcional, ya hay scripts npm): `npm i -g @angular/cli`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Instalación
+```
+npm ci
+# o, si no tienes lock actualizado
+npm install
+```
 
-## Code scaffolding
+## Ejecutar en desarrollo
+```
+npm start
+```
+- Servirá en `http://localhost:4200`.
+- Las llamadas a API van a `/api/*` y se redirigen (proxy) al backend según `proxy.conf.json`.
+  - Por defecto: `http://localhost:3006` (puedes cambiar `target`).
+- Endpoints esperados por la app:
+  - GET/POST `/reservas`
+  - GET `/salas`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Pruebas (Jest)
+- Ejecutar todas:
+```
+npm test
+```
+- Modo watch:
+```
+npm run test:watch
+```
+- Para CI (genera junit.xml):
+```
+npm run test:ci
+```
 
-## Build
+## Build de producción
+```
+npm run build
+```
+Los artefactos se generan en `dist/reservas-salas_ng`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Docker (opcional)
+Construir y correr con Nginx:
+```
+docker build -t reservas-salas-ng .
+docker run --rm -p 8080:80 reservas-salas-ng
+```
+- App disponible en `http://localhost:8080`.
+- El proxy `/api` en `nginx.conf` apunta a `host.docker.internal:3000` por defecto. Ajusta si tu backend usa otro host/puerto.
 
-## Running unit tests
+## CI/CD
+- GitHub Actions (CI simple): `.github/workflows/ci.yml`
+  - `npm ci` → `npm run test:ci` → `npm run build` → sube artefacto `dist/`.
+- Jenkins (CD opcional): `Jenkinsfile`
+  - Etapa Build & Test (Node 20): `npm ci`, `npm run test:ci`, `npm run build`.
+  - Etapa Docker (opcional) publica imagen si defines variables de entorno en Jenkins:
+    - `DOCKER_REGISTRY`, `DOCKER_IMAGE`, `DOCKER_CREDENTIALS_ID`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Configuración útil
+- Aliases de imports (TypeScript):
+  - `@core/*` → `src/app/core/*`
+  - `@features/*` → `src/app/features/*`
+- API base (desarrollo): `src/environments/environment.ts` → `apiBaseUrl: '/api'`.
+- Proxy (desarrollo): `proxy.conf.json` → cambia `target` al host/puerto de tu backend.
 
-## Running end-to-end tests
+## Notas
+- El proyecto usa PrimeNG y FullCalendar. Los estilos base están en `src/styles.scss`.
+- Si modificas el tamaño del bundle, los budgets de producción están configurados en `angular.json` para permitir la compilación.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+Cualquier duda o mejora que quieras automatizar (lint, cobertura, deploy estático, etc.), la podemos agregar sobre esta base.
