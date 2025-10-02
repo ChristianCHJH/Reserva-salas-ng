@@ -1,0 +1,46 @@
+<div class="reservas-container">
+    <div class="grid">
+        <div class="col-12 flex align-items-center justify-content-between">
+            <h2 class="mb-3">Reservas de salas</h2>
+            <div class="flex align-items-center gap-3">
+                <span class="text-500 hidden sm:block">Cargadas: {{ reservas.length }}</span>
+                <p-selectButton [options]="opcionesVista" optionLabel="label" optionValue="value" [(ngModel)]="vista"></p-selectButton>
+            </div>
+        </div>
+
+        <!-- Listado -->
+        <div class="col-12" *ngIf="vista === 'listado'">
+            <p-table [value]="reservas" [paginator]="true" [rows]="10"
+                     [showCurrentPageReport]="true" responsiveLayout="scroll"
+                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservas">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Título</th>
+                        <th>Sala</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Usuario</th>
+                        <th>Descripción</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-reserva>
+                    <tr>
+                        <td>{{reserva.titulo}}</td>
+                        <td>
+                            <span class="chip" [ngStyle]="getChipStyle(reserva.sala?.color)">{{reserva.sala?.nombre}}</span>
+                        </td>
+                        <td>{{reserva.inicio | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{reserva.fin | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{reserva.usuario?.nombres}} {{reserva.usuario?.apellidos}}</td>
+                        <td>{{reserva.descripcion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <!-- Calendario -->
+        <div class="col-12 mt-4" *ngIf="vista === 'calendario'">
+            <full-calendar [options]="opcionesCalendario"></full-calendar>
+        </div>
+    </div>
+</div>
