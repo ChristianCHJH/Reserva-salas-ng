@@ -62,6 +62,18 @@ docker run --rm -p 8080:80 reservas-salas-ng
   - Etapa Docker (opcional) publica imagen si defines variables de entorno en Jenkins:
     - `DOCKER_REGISTRY`, `DOCKER_IMAGE`, `DOCKER_CREDENTIALS_ID`.
 
+## Variables de entorno (tests/CI/CD)
+- Pruebas unitarias (Jest): no requieren variables obligatorias.
+  - Opcional (reportes JUnit): `JEST_JUNIT_OUTPUT=junit.xml` para cambiar la ruta del reporte.
+- Jenkins (CD opcional):
+  - `DOCKER_REGISTRY` (p. ej. `ghcr.io` o `registry.hub.docker.com`).
+  - `DOCKER_IMAGE` (p. ej. `org/reservas-salas-ng`).
+  - `DOCKER_CREDENTIALS_ID` (ID de credenciales en Jenkins).
+- Docker build (opcional):
+  - `--build-arg BACKEND_URL=http://host.docker.internal:3000` para fijar el upstream del proxy `/api` en Nginx.
+- Desarrollo (sin variables):
+  - Edita `proxy.conf.json` → `target` del backend.
+
 ## Configuración útil
 - Aliases de imports (TypeScript):
   - `@core/*` → `src/app/core/*`
