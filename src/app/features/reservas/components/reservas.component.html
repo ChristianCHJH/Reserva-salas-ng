@@ -1,10 +1,14 @@
 <div class="reservas-container">
+    <p-toast position="top-right"></p-toast>
     <div class="grid">
         <div class="col-12 flex align-items-center justify-content-between">
             <h2 class="mb-3">Reservas de salas</h2>
             <div class="flex align-items-center gap-3">
-                <span class="text-500 hidden sm:block">Cargadas: {{ reservas.length }}</span>
-                <p-selectButton [options]="opcionesVista" optionLabel="label" optionValue="value" [(ngModel)]="vista"></p-selectButton>
+                <button pButton type="button" (click)="abrirModal()" label="Nueva reserva"></button>
+                <div class="vista-group">
+                    <button pButton type="button" [ngClass]="{'p-button-outlined': vista !== 'calendario'}" icon="pi pi-calendar" (click)="vista='calendario'"></button>
+                    <button pButton type="button" [ngClass]="{'p-button-outlined': vista !== 'listado'}" icon="pi pi-list" (click)="vista='listado'"></button>
+                </div>
             </div>
         </div>
 
@@ -44,3 +48,70 @@
         </div>
     </div>
 </div>
+
+<p-dialog header="Nueva reserva" [(visible)]="mostrarModal" [modal]="true"
+          [style]="{width: '520px'}" [draggable]="false" [resizable]="false">
+  <div class="grid w-full">
+    <div class="col-12">
+      <label class="block mb-2">Sala <span class="req">*</span></label>
+      <p-dropdown [options]="salas" optionLabel="nombre" optionValue="salaId"
+                  [(ngModel)]="salaId" placeholder="Seleccione una sala"
+                  [style]="{width:'100%'}" [autoDisplayFirst]="false" [showClear]="true">
+        <ng-template pTemplate="item" let-s>
+          <span class="color-dot" [ngStyle]="getChipStyle(s?.color)"></span>
+          <span class="ml-2">{{ s?.nombre }}</span>
+        </ng-template>
+        <ng-template pTemplate="selectedItem" let-s>
+          <span *ngIf="s" class="color-dot" [ngStyle]="getChipStyle(s?.color)"></span>
+          <span class="ml-2" *ngIf="s">{{ s?.nombre }}</span>
+          <span *ngIf="!s" class="text-500">Seleccione una sala</span>
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+    <div class="col-12">
+      <label class="block mb-2">Fecha <span class="req">*</span></label>
+      <p-calendar [(ngModel)]="selectedDate" (ngModelChange)="onFechaHoraChange()"
+                  [showIcon]="true" [locale]="calendarLocale" dateFormat="dd/mm/yy"
+                  panelStyleClass="calendario-pequeno" [style]="{width:'100%'}"></p-calendar>
+    </div>
+
+    <div class="col-12 flex align-items-center gap-3 mb-2">
+      <span class="text-500">Intervalo:</span>
+      <p-selectButton [options]="[{label:'15m', value:15}, {label:'30m', value:30}]"
+                      [(ngModel)]="timeStep" (ngModelChange)="onCambiarStep($event)"></p-selectButton>
+    </div>
+
+    <div class="col-12">
+      <div class="flex gap-2">
+        <div class="flex-1">
+          <label class="block mb-2">Hora inicio <span class="req">*</span></label>
+          <p-dropdown [options]="timeOptions" placeholder="--:--" [filter]="false" [editable]="true"
+                      [style]="{width:'100%'}"
+                      [(ngModel)]="startTimeText" (ngModelChange)="onTimeTextChange()"></p-dropdown>
+        </div>
+        <div class="flex-1">
+          <label class="block mb-2">Hora fin <span class="req">*</span></label>
+          <p-dropdown [options]="timeOptions" placeholder="--:--" [filter]="false" [editable]="true"
+                      [style]="{width:'100%'}"
+                      [(ngModel)]="endTimeText" (ngModelChange)="onTimeTextChange()"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <label class="block mb-2">Título <span class="req">*</span></label>
+      <input pInputText [(ngModel)]="titulo" placeholder="Reunión" class="w-full" maxlength="140" />
+    </div>
+
+    <div class="col-12">
+      <label class="block mb-2">Descripción</label>
+      <textarea pInputTextarea [(ngModel)]="descripcion" rows="3" class="w-full"></textarea>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" class="p-button-text" type="button" (click)="mostrarModal=false"></button>
+    <button pButton label="Crear" type="button" (click)="crearReserva()" [disabled]="!titulo || !inicio || !fin || !salaId"></button>
+  </ng-template>
+</p-dialog>
+

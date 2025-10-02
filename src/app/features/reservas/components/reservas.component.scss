@@ -22,3 +22,41 @@ full-calendar {
     border: 1px solid transparent;
     line-height: 1;
 }
+
+/* Reducir tamaño del panel del calendario del modal */
+:host ::ng-deep .calendario-pequeno {
+    font-size: 0.8rem;
+    width: 14rem !important;
+}
+:host ::ng-deep .calendario-pequeno .p-datepicker-calendar td {
+    padding: .1rem .2rem;
+}
+:host ::ng-deep .calendario-pequeno .p-datepicker-header {
+    padding: .25rem .5rem;
+}
+
+.color-dot {
+    display: inline-block;
+    width: .75rem;
+    height: .75rem;
+    border-radius: 9999px;
+    border-width: 1px;
+    border-style: solid;
+    vertical-align: middle;
+}
+
+.req { color: #ef4444; }
+
+/* Toggle de vista con solo iconos */
+.vista-group .p-button {
+    border-radius: 0;
+}
+.vista-group .p-button:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.vista-group .p-button:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    margin-left: -1px; /* elimina la línea entre botones */
+}

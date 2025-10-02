@@ -8,6 +8,13 @@ import { CalendarModule } from 'primeng/calendar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ReservasComponent } from './components/reservas.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { RouterModule } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
     declarations: [
@@ -17,14 +24,21 @@ import { FullCalendarModule } from '@fullcalendar/angular';
         CommonModule,
         FormsModule,
         HttpClientModule,
+        RouterModule,
         TableModule,
         ButtonModule,
         CalendarModule,
         FullCalendarModule,
-        SelectButtonModule
+        SelectButtonModule,
+        DropdownModule,
+        InputTextModule,
+        InputTextareaModule,
+        DialogModule,
+        ToastModule
     ],
     exports: [
         ReservasComponent
-    ]
+    ],
+    providers: [MessageService]
 })
 export class ReservasModule { }
